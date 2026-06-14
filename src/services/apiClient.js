@@ -1,37 +1,39 @@
 import axios from 'axios';
+import { HTTP_STATUS } from '../types';
 
-// Creamos la instancia apuntando al entorno local de tu backend en Django
+let _token = null;
+
+export function setAuthToken(token) {
+  _token = token;
+}
+
+export function clearAuthToken() {
+  _token = null;
+}
+
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8000/api', // Ajusta el puerto si tu Django usa otro (ej: 8000)
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
   }
 });
 
-// Interceptor: Antes de enviar cualquier petición HTTP al backend, 
-// este fragmento revisa si el usuario tiene sesión activa y le inyecta el token JWT.
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('sisa_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (_token) {
+      config.headers.Authorization = `Bearer ${_token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Interceptor: Si el backend responde con un error 401 (Token expirado o inválido),
-// limpiamos automáticamente la sesión en el frontend.
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem('sisa_token');
-      // Aquí se podría forzar un redireccionamiento lógico en el futuro
+    if (error.response && error.response.status === HTTP_STATUS.UNAUTHORIZED) {
+      clearAuthToken();
     }
     return Promise.reject(error);
   }
