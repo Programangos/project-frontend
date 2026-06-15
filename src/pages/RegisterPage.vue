@@ -16,6 +16,23 @@ const formData = ref<RegistrationForm | null>(null)
 const errorMessage = ref('')
 const loading = ref(false)
 
+function buildRegistrationPayload(data: RegistrationForm) {
+  return {
+    full_name: data.fullName,
+    email: `${data.emailPrefix}@unal.edu.co`,
+    password: data.password,
+    major: data.major,
+    current_semester: Number(data.currentSemester),
+  }
+}
+
+function parseRegistrationError(err: unknown): string {
+  const axiosErr = err as { response?: { data?: Record<string, string | string[]> } }
+  return axiosErr.response?.data
+    ? Object.values(axiosErr.response.data).flat().join(', ')
+    : 'Error de conexión con el servidor. Intenta de nuevo.'
+}
+
 function onFormSuccess(data: RegistrationForm) {
   formData.value = data
   step.value = 'success'
@@ -29,21 +46,10 @@ async function onAcceptAndContinue() {
   if (!formData.value) return
   loading.value = true
   try {
-    const payload = {
-      full_name: formData.value.fullName,
-      email: `${formData.value.emailPrefix}@unal.edu.co`,
-      password: formData.value.password,
-      major: formData.value.major,
-      current_semester: Number(formData.value.currentSemester),
-    }
-    await authStore.registerOnly(payload)
+    await authStore.registerOnly(buildRegistrationPayload(formData.value))
     router.push('/login')
   } catch (err: unknown) {
-    const axiosErr = err as { response?: { data?: Record<string, string | string[]> } }
-    const msg = axiosErr.response?.data
-      ? Object.values(axiosErr.response.data).flat().join(', ')
-      : 'Error de conexión con el servidor. Intenta de nuevo.'
-    errorMessage.value = msg
+    errorMessage.value = parseRegistrationError(err)
     step.value = 'error'
   } finally {
     loading.value = false
