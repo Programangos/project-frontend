@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { Eye, EyeOff, Search, ChevronDown, Check, MapPin, BookOpen, ClipboardList, Bell } from 'lucide-vue-next'
 import type { RegistrationForm, ValidationErrors, CarreraOption } from '../types'
-import { CARRERAS_UNAL, SEMESTRES } from '../types'
+import { CARRERAS_UNAL, SEMESTRES, MIN_NAME_LENGTH, MIN_PASSWORD_LENGTH } from '../types'
 
 const emit = defineEmits<{
   (e: 'success', data: RegistrationForm): void
@@ -55,11 +55,11 @@ function handleCarreraSelect(carrera: CarreraOption) {
 function validateForm(): boolean {
   const e: ValidationErrors = {}
   if (!form.value.fullName.trim()) e.fullName = 'El nombre completo es obligatorio.'
-  else if (form.value.fullName.trim().length < 3) e.fullName = 'Debe tener al menos 3 caracteres.'
+  else if (form.value.fullName.trim().length < MIN_NAME_LENGTH) e.fullName = `Debe tener al menos ${MIN_NAME_LENGTH} caracteres.`
   if (!form.value.emailPrefix.trim()) e.emailPrefix = 'El correo institucional es obligatorio.'
   else if (!/^[a-zA-Z0-9._-]+$/.test(form.value.emailPrefix)) e.emailPrefix = 'Formato de correo inválido.'
   if (!form.value.password) e.password = 'La contraseña es obligatoria.'
-  else if (form.value.password.length < 6) e.password = 'Debe tener al menos 6 caracteres.'
+  else if (form.value.password.length < MIN_PASSWORD_LENGTH) e.password = `Debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`
   if (!form.value.major) e.major = 'Debes seleccionar tu carrera.'
   if (!form.value.currentSemester) e.currentSemester = 'Debes seleccionar tu semestre.'
   if (!form.value.acceptTerms) e.acceptTerms = 'Debes aceptar los términos y condiciones.'

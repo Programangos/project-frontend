@@ -21,6 +21,12 @@ export interface CarreraOption {
   name: string
 }
 
+export const API_TIMEOUT = 5000
+
+export const MIN_NAME_LENGTH = 3
+
+export const MIN_PASSWORD_LENGTH = 6
+
 export const SEMESTRES = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
 
 export const HTTP_STATUS = {
