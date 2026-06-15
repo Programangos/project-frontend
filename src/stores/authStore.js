@@ -22,41 +22,32 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async loginUser(email, password) {
       this.loading = true;
-      try {
-        const response = await authService.login(email, password);
-        this.token = response.data.access;
-        this.user = response.data.user;
-        localStorage.setItem('sisa_token', this.token);
-        setAuthToken(this.token);
-        this.needsCharacterization = !response.data.user.is_characterized;
-      } finally {
-        this.loading = false;
-      }
+      const response = await authService.login(email, password);
+      this.token = response.data.access;
+      this.user = response.data.user;
+      localStorage.setItem('sisa_token', this.token);
+      setAuthToken(this.token);
+      this.needsCharacterization = !response.data.user.is_characterized;
+      this.loading = false;
     },
 
     async registerUser(userData) {
       this.loading = true;
-      try {
-        const response = await authService.register(userData);
-        this.token = response.data.access;
-        this.user = response.data.user;
-        localStorage.setItem('sisa_token', this.token);
-        setAuthToken(this.token);
-        this.needsCharacterization = true;
-      } finally {
-        this.loading = false;
-      }
+      const response = await authService.register(userData);
+      this.token = response.data.access;
+      this.user = response.data.user;
+      localStorage.setItem('sisa_token', this.token);
+      setAuthToken(this.token);
+      this.needsCharacterization = true;
+      this.loading = false;
     },
 
     async completeCharacterization(data) {
       this.loading = true;
-      try {
-        await authService.submitCharacterization(data);
-        this.needsCharacterization = false;
-        if (this.user) this.user.is_characterized = true;
-      } finally {
-        this.loading = false;
-      }
+      await authService.submitCharacterization(data);
+      this.needsCharacterization = false;
+      if (this.user) this.user.is_characterized = true;
+      this.loading = false;
     },
 
     async registerOnly(userData) {

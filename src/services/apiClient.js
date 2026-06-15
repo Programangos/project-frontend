@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HTTP_STATUS } from '../types';
+import { HTTP_STATUS, API_TIMEOUT } from '../types';
 
 let _token = null;
 
@@ -13,7 +13,7 @@ export function clearAuthToken() {
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
-  timeout: 5000,
+  timeout: API_TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
   }
