@@ -53,18 +53,18 @@ function handleCarreraSelect(carrera: CarreraOption) {
 }
 
 function validateForm(): boolean {
-  const e: ValidationErrors = {}
-  if (!form.value.fullName.trim()) e.fullName = 'El nombre completo es obligatorio.'
-  else if (form.value.fullName.trim().length < MIN_NAME_LENGTH) e.fullName = `Debe tener al menos ${MIN_NAME_LENGTH} caracteres.`
-  if (!form.value.emailPrefix.trim()) e.emailPrefix = 'El correo institucional es obligatorio.'
-  else if (!/^[a-zA-Z0-9._-]+$/.test(form.value.emailPrefix)) e.emailPrefix = 'Formato de correo inválido.'
-  if (!form.value.password) e.password = 'La contraseña es obligatoria.'
-  else if (form.value.password.length < MIN_PASSWORD_LENGTH) e.password = `Debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`
-  if (!form.value.major) e.major = 'Debes seleccionar tu carrera.'
-  if (!form.value.currentSemester) e.currentSemester = 'Debes seleccionar tu semestre.'
-  if (!form.value.acceptTerms) e.acceptTerms = 'Debes aceptar los términos y condiciones.'
-  errors.value = e
-  return Object.keys(e).length === 0
+  const validationErrors: ValidationErrors = {}
+  if (!form.value.fullName.trim()) validationErrors.fullName = 'El nombre completo es obligatorio.'
+  else if (form.value.fullName.trim().length < MIN_NAME_LENGTH) validationErrors.fullName = `Debe tener al menos ${MIN_NAME_LENGTH} caracteres.`
+  if (!form.value.emailPrefix.trim()) validationErrors.emailPrefix = 'El correo institucional es obligatorio.'
+  else if (!/^[a-zA-Z0-9._-]+$/.test(form.value.emailPrefix)) validationErrors.emailPrefix = 'Formato de correo inválido.'
+  if (!form.value.password) validationErrors.password = 'La contraseña es obligatoria.'
+  else if (form.value.password.length < MIN_PASSWORD_LENGTH) validationErrors.password = `Debe tener al menos ${MIN_PASSWORD_LENGTH} caracteres.`
+  if (!form.value.major) validationErrors.major = 'Debes seleccionar tu carrera.'
+  if (!form.value.currentSemester) validationErrors.currentSemester = 'Debes seleccionar tu semestre.'
+  if (!form.value.acceptTerms) validationErrors.acceptTerms = 'Debes aceptar los términos y condiciones.'
+  errors.value = validationErrors
+  return Object.keys(validationErrors).length === 0
 }
 
 function handleSubmit(e: Event) {
