@@ -5,7 +5,7 @@
         <div class="flex items-center justify-between p-4 border-b">
           <h2 class="font-medium text-gray-900">Documentos legales</h2>
           <button @click="$emit('close')" class="text-gray-400 hover:text-gray-700">
-            <XMarkIcon class="w-5 h-5" />
+            <X class="w-5 h-5" />
           </button>
         </div>
         <div class="flex gap-1 px-4 pt-3 border-b">
@@ -37,7 +37,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { XMarkIcon } from 'lucide-vue-next'
+import { X } from 'lucide-vue-next'
 import TermsContent from './TermsContent.vue'
 import PrivacyContent from './PrivacyContent.vue'
 

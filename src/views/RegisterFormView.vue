@@ -376,10 +376,8 @@ function handleSubmit(e: Event) {
           </form>
         </div>
       </div>
-
-        </div>
-      </div>
     </div>
+
   </div>
 
   <LegalModal :isOpen="showLegalModal" :initialTab="legalTab" @close="showLegalModal = false" />
