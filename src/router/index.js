@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
 import RegisterPage from '../pages/RegisterPage.vue';
+import LoginPage from '../pages/LoginPage.vue';
 
 const routes = [
   { 
@@ -10,7 +11,7 @@ const routes = [
   },
   { 
     path: '/login', 
-    component: { template: '<div>Formulario Login</div>' } 
+    component: LoginPage 
   },
   { 
     path: '/register', 
