@@ -16,6 +16,18 @@ export interface ValidationErrors {
   acceptTerms?: string
 }
 
+export interface UserData {
+  id: number
+  full_name: string
+  email: string
+  major: string
+  avatar_url: string | null
+  current_semester: number
+  reputation_points: number
+  created_at: string
+  is_characterized: boolean
+}
+
 export interface CarreraOption {
   id: string
   name: string
