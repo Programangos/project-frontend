@@ -3,7 +3,6 @@ import { ref, computed } from 'vue'
 import { Eye, EyeOff, Search, ChevronDown, Check, MapPin, BookOpen, ClipboardList, Bell } from 'lucide-vue-next'
 import type { RegistrationForm, ValidationErrors, CarreraOption } from '../types'
 import { CARRERAS_UNAL, SEMESTRES, MIN_NAME_LENGTH, MIN_PASSWORD_LENGTH } from '../types'
-import LegalModal from '../components/LegalModal.vue'
 
 const emit = defineEmits<{
   (e: 'success', data: RegistrationForm): void
@@ -22,8 +21,6 @@ const form = ref<RegistrationForm>({
 const showPassword = ref(false)
 const carreraSearch = ref('')
 const isCarreraDropdownOpen = ref(false)
-const showLegalModal = ref(false)
-const legalTab = ref<'terms' | 'privacy'>('terms')
 const errors = ref<ValidationErrors>({})
 
 const filteredCarreras = computed(() =>
@@ -345,8 +342,8 @@ function handleSubmit(e: Event) {
             <div class="bg-slate-50 p-4 border-2 border-slate-100 mt-8 space-y-4">
               <div class="text-xs leading-relaxed text-slate-600 font-sans font-medium">
                 Al registrarte, aceptas nuestros términos de servicio y política de privacidad.
-                <a href="#" @click.prevent="legalTab='terms'; showLegalModal=true" class="text-indigo-600 hover:underline font-bold">[Términos]</a>
-                <a href="#" @click.prevent="legalTab='privacy'; showLegalModal=true" class="text-indigo-600 hover:underline font-bold ml-1">[Privacidad]</a>
+                <a href="#" class="text-indigo-600 hover:underline font-bold">[Términos]</a>
+                <a href="#" class="text-indigo-600 hover:underline font-bold ml-1">[Privacidad]</a>
               </div>
               <label class="flex items-start gap-3 cursor-pointer">
                 <input
@@ -377,10 +374,6 @@ function handleSubmit(e: Event) {
         </div>
       </div>
 
-        </div>
-      </div>
     </div>
   </div>
-
-  <LegalModal :isOpen="showLegalModal" :initialTab="legalTab" @close="showLegalModal = false" />
 </template>
