@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
 import { authService } from '../services/authService'
+import type { UserData } from '../types'
 import { CARRERAS_UNAL } from '../types'
 import { User, Award, Star, Pencil, ArrowLeft, Check, X, ChevronDown, Search } from 'lucide-vue-next'
 
@@ -32,9 +33,10 @@ function selectCarrera(name: string) {
 }
 
 function startEditing() {
-  if (!authStore.user) return
-  editMajor.value = authStore.user.major || ''
-  editSemester.value = authStore.user.current_semester || 0
+  const u = authStore.user as UserData | null
+  if (!u) return
+  editMajor.value = u.major || ''
+  editSemester.value = u.current_semester || 0
   editing.value = true
   errorMessage.value = ''
   successMessage.value = ''
@@ -46,12 +48,13 @@ function cancelEditing() {
 }
 
 async function saveProfile() {
-  if (!authStore.user) return
+  const u = authStore.user as UserData | null
+  if (!u) return
   saving.value = true
   errorMessage.value = ''
   successMessage.value = ''
   try {
-    const response = await authService.updateProfile(authStore.user.id, {
+    const response = await authService.updateProfile(u.id, {
       major: editMajor.value,
       current_semester: editSemester.value,
     })
@@ -80,13 +83,14 @@ function triggerFileInput() {
 async function handleFileSelected(e: Event) {
   const input = e.target as HTMLInputElement
   const file = input.files?.[0]
-  if (!file || !authStore.user) return
+  const u = authStore.user as UserData | null
+  if (!file || !u) return
 
   const reader = new FileReader()
   reader.onload = async (event) => {
     const dataUrl = event.target?.result as string
     try {
-      const response = await authService.updateProfile(authStore.user.id, {
+      const response = await authService.updateProfile(u.id, {
         avatar_url: dataUrl,
       })
       authStore.user = response.data
@@ -98,7 +102,10 @@ async function handleFileSelected(e: Event) {
   reader.readAsDataURL(file)
 }
 
-const user = computed(() => authStore.user)
+const user = computed((): UserData | null => {
+  const u = authStore.user
+  return u ? (u as UserData) : null
+})
 </script>
 
 <template>

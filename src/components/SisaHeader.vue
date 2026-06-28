@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useAuthStore } from '../stores/authStore'
 import { User, LogOut, ChevronDown } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
+import type { UserData } from '../types'
 
 const authStore = useAuthStore()
 const router = useRouter()
 const showDropdown = ref(false)
+const user = computed((): UserData | null => {
+  const u = authStore.user
+  return u ? (u as UserData) : null
+})
 
 function getEmailPrefix(email: string): string {
   return email.split('@')[0]
@@ -50,18 +55,18 @@ function closeDropdown() {
 
       <!-- Right: Profile / Login -->
       <div class="flex items-center gap-4">
-        <template v-if="authStore.isAuthenticated && authStore.user">
+        <template v-if="authStore.isAuthenticated && user">
           <div class="relative">
             <button
               @click="toggleDropdown"
               class="flex items-center gap-2 hover:bg-slate-50 px-3 py-2 transition-colors rounded-sm cursor-pointer"
             >
               <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden">
-                <img v-if="authStore.user.avatar_url" :src="authStore.user.avatar_url" class="w-full h-full object-cover" />
+                <img v-if="user.avatar_url" :src="user.avatar_url" class="w-full h-full object-cover" />
                 <User v-else class="w-4 h-4 text-slate-500" />
               </div>
               <span class="text-xs font-bold text-slate-700 uppercase tracking-wider hidden sm:inline">
-                {{ getEmailPrefix(authStore.user.email) }}
+                {{ getEmailPrefix(user.email) }}
               </span>
               <ChevronDown class="w-3 h-3 text-slate-400" />
             </button>
