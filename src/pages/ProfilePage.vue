@@ -3,7 +3,8 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
 import { authService } from '../services/authService'
-import { User, Award, Star, Pencil, ArrowLeft, Check, X } from 'lucide-vue-next'
+import { CARRERAS_UNAL } from '../types'
+import { User, Award, Star, Pencil, ArrowLeft, Check, X, ChevronDown, Search } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -15,6 +16,20 @@ const successMessage = ref('')
 
 const editMajor = ref('')
 const editSemester = ref(0)
+const carreraSearch = ref('')
+const isCarreraDropdownOpen = ref(false)
+
+const filteredCarreras = computed(() =>
+  CARRERAS_UNAL.filter(c =>
+    c.name.toLowerCase().includes(carreraSearch.value.toLowerCase())
+  )
+)
+
+function selectCarrera(name: string) {
+  editMajor.value = name
+  carreraSearch.value = ''
+  isCarreraDropdownOpen.value = false
+}
 
 function startEditing() {
   if (!authStore.user) return
@@ -194,11 +209,49 @@ const user = computed(() => authStore.user)
                   <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">
                     Carrera
                   </label>
-                  <input
-                    v-model="editMajor"
-                    class="w-full border-2 border-slate-200 p-3 text-sm outline-none focus:border-indigo-500 focus:bg-white text-slate-900 transition-colors"
-                    placeholder="Nombre de la carrera"
-                  />
+                  <div class="relative">
+                    <div
+                      @click="isCarreraDropdownOpen = !isCarreraDropdownOpen"
+                      class="w-full border-2 border-slate-200 p-3 text-sm flex items-center justify-between cursor-pointer transition-colors bg-white"
+                    >
+                      <span :class="editMajor ? 'text-slate-900 font-semibold' : 'text-slate-400 font-medium'">
+                        {{ editMajor || 'Selecciona tu carrera' }}
+                      </span>
+                      <ChevronDown class="w-4 h-4 text-slate-400" />
+                    </div>
+                    <div
+                      v-if="isCarreraDropdownOpen"
+                      class="absolute left-0 right-0 mt-2 bg-white border-2 border-slate-900 shadow-md z-20 overflow-hidden"
+                    >
+                      <div class="p-2 border-b-2 border-slate-100 flex items-center gap-2 bg-slate-100">
+                        <Search class="w-4 h-4 text-slate-500 ml-2" />
+                        <input
+                          type="text"
+                          placeholder="Buscar carrera universitaria..."
+                          v-model="carreraSearch"
+                          @click.stop
+                          class="w-full text-xs py-1.5 focus:outline-none placeholder-slate-400 text-slate-800 font-mono bg-transparent"
+                        />
+                      </div>
+                      <div class="max-h-52 overflow-y-auto">
+                        <div
+                          v-for="c in filteredCarreras"
+                          :key="c.id"
+                          @click="selectCarrera(c.name)"
+                          :class="[
+                            'px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-100 hover:text-indigo-900 transition-colors flex items-center justify-between cursor-pointer',
+                            editMajor === c.name ? 'bg-indigo-50 text-indigo-900 font-bold' : ''
+                          ]"
+                        >
+                          <span>{{ c.name }}</span>
+                          <Check v-if="editMajor === c.name" class="w-3.5 h-3.5 text-indigo-600" />
+                        </div>
+                        <p v-if="filteredCarreras.length === 0" class="px-4 py-3 text-xs text-slate-400 italic font-mono text-center">
+                          No se encontraron carreras
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">
