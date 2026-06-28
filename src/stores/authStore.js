@@ -38,7 +38,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = response.data.user;
       localStorage.setItem('sisa_token', this.token);
       setAuthToken(this.token);
-      this.needsCharacterization = true;
+      this.needsCharacterization = !response.data.user.is_characterized;
       this.loading = false;
     },
 
