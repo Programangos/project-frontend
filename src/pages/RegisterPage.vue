@@ -46,8 +46,8 @@ async function onAcceptAndContinue() {
   if (!formData.value) return
   loading.value = true
   try {
-    await authStore.registerOnly(buildRegistrationPayload(formData.value))
-    router.push('/login')
+    await authStore.registerUser(buildRegistrationPayload(formData.value))
+    router.push('/')
   } catch (err: unknown) {
     errorMessage.value = parseRegistrationError(err)
     step.value = 'error'

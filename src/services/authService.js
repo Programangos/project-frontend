@@ -11,5 +11,9 @@ export const authService = {
 
   login(email, password) {
     return apiClient.post('/auth/login/', { email, password });
+  },
+
+  updateProfile(userId, data) {
+    return apiClient.patch(`/auth/profile/${userId}/`, data);
   }
 };
