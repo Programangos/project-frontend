@@ -8,8 +8,7 @@ import ProfilePage from '../pages/ProfilePage.vue';
 const routes = [
   {
     path: '/',
-    component: MainMenuPage,
-    meta: { requiresAuth: true }
+    redirect: '/login'
   },
   {
     path: '/login',
@@ -18,6 +17,11 @@ const routes = [
   {
     path: '/register',
     component: RegisterPage
+  },
+  {
+    path: '/menu',
+    component: MainMenuPage,
+    meta: { requiresAuth: true }
   },
   {
     path: '/characterization',

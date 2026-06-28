@@ -36,7 +36,7 @@ function closeDropdown() {
   <header class="sticky top-0 z-50 bg-white border-b-2 border-slate-200 px-6 py-3 shadow-sm">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
       <!-- Left: Brand Logo -->
-      <router-link to="/" class="flex items-center gap-2">
+      <router-link to="/menu" class="flex items-center gap-2">
         <img
           src="/assets/images/logom.png"
           alt="SISA"

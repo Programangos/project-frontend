@@ -82,7 +82,7 @@ function handleSubmit(e: Event) {
   <div class="w-full">
     <!-- Breadcrumb -->
     <nav class="text-[11px] uppercase tracking-wider text-slate-400 mb-6 flex items-center gap-1.5 font-bold px-1 select-none">
-      <router-link to="/" class="hover:text-indigo-600 transition-colors">Inicio</router-link>
+      <router-link to="/menu" class="hover:text-indigo-600 transition-colors">Inicio</router-link>
       <span>&rsaquo;</span>
       <span class="text-slate-900 font-extrabold">Registro</span>
     </nav>

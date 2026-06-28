@@ -121,7 +121,7 @@ const user = computed((): UserData | null => {
         </p>
       </div>
       <button
-        @click="router.push('/')"
+        @click="router.push('/menu')"
         class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-600 hover:text-indigo-800 transition-colors"
       >
         <ArrowLeft class="w-3.5 h-3.5" />

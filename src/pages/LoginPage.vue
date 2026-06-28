@@ -40,7 +40,7 @@ async function handleSubmit(e: Event) {
   try {
     const email = `${emailPrefix.value}@unal.edu.co`
     await authStore.loginUser(email, password.value)
-    router.push('/')
+    router.push('/menu')
   } catch (err: unknown) {
     const axiosErr = err as { response?: { data?: Record<string, string | string[]> } }
     const msg = axiosErr.response?.data
