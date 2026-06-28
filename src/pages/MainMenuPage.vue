@@ -1,26 +1,30 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/authStore'
-import { MapPin, BookOpen, ClipboardList, Bell, User, LogOut } from 'lucide-vue-next'
+import { MapPin, BookOpen, ClipboardList, Bell, User } from 'lucide-vue-next'
 
 const router = useRouter()
-const authStore = useAuthStore()
 
 const menuItems = [
-  { id: 'map', label: 'Mapa del Campus', icon: MapPin, route: '/map' },
-  { id: 'advices', label: 'Consejos Académicos', icon: BookOpen, route: '/advices' },
-  { id: 'procedures', label: 'Trámites', icon: ClipboardList, route: '/procedures' },
-  { id: 'notices', label: 'Avisos y Eventos', icon: Bell, route: '/notices' },
-  { id: 'profile', label: 'Mi Perfil', icon: User, route: '/profile' },
+  { id: 'map', label: 'Mapa del Campus', icon: MapPin, route: '/map', img: '/assets/images/menu-mapa.png' },
+  { id: 'advices', label: 'Consejos Académicos', icon: BookOpen, route: '/advices', img: '/assets/images/menu-consejos.png' },
+  { id: 'procedures', label: 'Trámites', icon: ClipboardList, route: '/procedures', img: '/assets/images/menu-tramites.png' },
+  { id: 'notices', label: 'Avisos y Eventos', icon: Bell, route: '/notices', img: '/assets/images/menu-avisos.png' },
+  { id: 'profile', label: 'Mi Perfil', icon: User, route: '/profile', img: '/assets/images/menu-perfil.png' },
 ]
+
+const imagesLoaded = ref<Record<string, boolean>>({})
+
+function onImageError(id: string) {
+  imagesLoaded.value[id] = false
+}
+
+function onImageLoad(id: string) {
+  imagesLoaded.value[id] = true
+}
 
 function goTo(route: string) {
   router.push(route)
-}
-
-function handleLogout() {
-  authStore.logoutUser()
-  router.push('/login')
 }
 </script>
 
@@ -39,10 +43,22 @@ function handleLogout() {
       <div
         v-for="item in menuItems"
         :key="item.id"
-        class="bg-white border-2 border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all group"
+        class="bg-white border-2 border-slate-300 shadow-sm hover:shadow-md hover:border-indigo-400 transition-all group"
       >
-        <div class="bg-slate-50 border-b-2 border-slate-100 flex items-center justify-center py-10 px-6 group-hover:bg-indigo-50/50 transition-colors">
-          <component :is="item.icon" class="w-16 h-16 text-slate-400 group-hover:text-indigo-500 transition-colors" />
+        <div class="bg-slate-50 border-b-2 border-slate-200 flex items-center justify-center py-10 px-6 relative overflow-hidden min-h-[140px]">
+          <img
+            v-show="imagesLoaded[item.id] !== false"
+            :src="item.img"
+            @load="onImageLoad(item.id)"
+            @error="onImageError(item.id)"
+            class="w-full h-full object-contain max-w-[100px] max-h-[100px]"
+            :alt="item.label"
+          />
+          <component
+            v-show="!imagesLoaded[item.id]"
+            :is="item.icon"
+            class="w-16 h-16 text-slate-400 group-hover:text-indigo-500 transition-colors"
+          />
         </div>
         <div class="p-5">
           <h3 class="font-display font-black text-sm uppercase tracking-wider text-slate-900">
@@ -56,16 +72,6 @@ function handleLogout() {
           </button>
         </div>
       </div>
-    </div>
-
-    <div class="pt-4 border-t-2 border-slate-200">
-      <button
-        @click="handleLogout"
-        class="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-bold py-4 px-10 uppercase text-xs tracking-widest transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
-      >
-        <LogOut class="w-4 h-4" />
-        Cerrar Sesión
-      </button>
     </div>
   </div>
 </template>
