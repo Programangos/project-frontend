@@ -119,6 +119,15 @@ async function handleSubmit(e: Event) {
             </div>
           </div>
 
+          <div class="text-right -mt-3">
+            <router-link
+              to="/forgot-password"
+              class="text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 transition-colors"
+            >
+              ¿Olvidaste tu contraseña?
+            </router-link>
+          </div>
+
           <!-- Submit -->
           <button
             type="submit"

@@ -4,6 +4,8 @@ import RegisterPage from '../pages/RegisterPage.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import MainMenuPage from '../pages/MainMenuPage.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
+import ForgotPasswordPage from '../pages/ForgotPasswordPage.vue';
+import ResetPasswordPage from '../pages/ResetPasswordPage.vue';
 
 const routes = [
   {
@@ -27,6 +29,14 @@ const routes = [
     path: '/characterization',
     component: { template: '<div>Formulario Caracterización Obligatoria</div>' },
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/forgot-password',
+    component: ForgotPasswordPage
+  },
+  {
+    path: '/reset-password',
+    component: ResetPasswordPage
   },
   {
     path: '/profile',
