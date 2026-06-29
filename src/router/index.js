@@ -4,6 +4,7 @@ import RegisterPage from '../pages/RegisterPage.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import MainMenuPage from '../pages/MainMenuPage.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
+import UsersPage from '../pages/UsersPage.vue';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage.vue';
 import ResetPasswordPage from '../pages/ResetPasswordPage.vue';
 
@@ -41,6 +42,11 @@ const routes = [
   {
     path: '/profile',
     component: ProfilePage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/users',
+    component: UsersPage,
     meta: { requiresAuth: true }
   }
 ];

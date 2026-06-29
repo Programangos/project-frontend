@@ -23,5 +23,13 @@ export const authService = {
 
   resetPassword(token, password) {
     return apiClient.post('/auth/reset-password/', { token, password });
+  },
+
+  getUsers() {
+    return apiClient.get('/admin/users/');
+  },
+
+  deleteUser(userId) {
+    return apiClient.delete(`/admin/users/${userId}/`);
   }
 };

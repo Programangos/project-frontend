@@ -26,6 +26,8 @@ export interface UserData {
   reputation_points: number
   created_at: string
   is_characterized: boolean
+  role: number | null
+  role_name: string | null
 }
 
 export interface CarreraOption {

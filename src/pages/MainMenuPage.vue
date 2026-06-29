@@ -1,17 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { MapPin, BookOpen, ClipboardList, Bell, User } from 'lucide-vue-next'
+import { useAuthStore } from '../stores/authStore'
+import { MapPin, BookOpen, ClipboardList, Bell, User, Users } from 'lucide-vue-next'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
-const menuItems = [
+const isAdmin = computed(() => authStore.isAdmin)
+
+const baseMenuItems = [
   { id: 'map', label: 'Mapa del Campus', icon: MapPin, route: '/map', img: '/assets/images/menu-mapa.png' },
   { id: 'advices', label: 'Consejos Académicos', icon: BookOpen, route: '/advices', img: '/assets/images/menu-consejos.png' },
   { id: 'procedures', label: 'Trámites', icon: ClipboardList, route: '/procedures', img: '/assets/images/menu-tramites.png' },
   { id: 'notices', label: 'Avisos y Eventos', icon: Bell, route: '/notices', img: '/assets/images/menu-avisos.png' },
   { id: 'profile', label: 'Mi Perfil', icon: User, route: '/profile', img: '/assets/images/menu-perfil.png' },
 ]
+
+const adminMenuItem = { id: 'users', label: 'Usuarios', icon: Users, route: '/users', img: '/assets/images/menu-usuarios.png' }
+
+const menuItems = computed(() => {
+  if (isAdmin.value) {
+    return [...baseMenuItems, adminMenuItem]
+  }
+  return baseMenuItems
+})
 
 const imagesLoaded = ref<Record<string, boolean>>({})
 
