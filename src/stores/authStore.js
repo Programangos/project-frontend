@@ -16,7 +16,7 @@ export const useAuthStore = defineStore('auth', {
 
   getters: {
     isAuthenticated: (state) => !!state.token,
-    isAdmin: (state) => state.user?.role === 'admin'
+    isAdmin: (state) => state.user?.role_name === 'Administrador'
   },
 
   actions: {
@@ -27,7 +27,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = response.data.user;
       localStorage.setItem('sisa_token', this.token);
       setAuthToken(this.token);
-      this.needsCharacterization = !response.data.user.is_characterized;
+      this.needsCharacterization = !response.data.user.is_characterized && response.data.user.role_name !== 'Administrador';
       this.loading = false;
     },
 

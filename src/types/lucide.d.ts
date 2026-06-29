@@ -8,6 +8,8 @@ declare module 'lucide-vue-next' {
   type LucideIcon = FunctionalComponent<LucideProps>
   export const User: LucideIcon
   export const LogOut: LucideIcon
+  export const Users: LucideIcon
+  export const Trash2: LucideIcon
   export const ChevronDown: LucideIcon
   export const Award: LucideIcon
   export const Star: LucideIcon
