@@ -5,6 +5,7 @@ import LoginPage from '../pages/LoginPage.vue';
 import MainMenuPage from '../pages/MainMenuPage.vue';
 import ProfilePage from '../pages/ProfilePage.vue';
 import UsersPage from '../pages/UsersPage.vue';
+import NoticesPage from '../pages/NoticesPage.vue';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage.vue';
 import ResetPasswordPage from '../pages/ResetPasswordPage.vue';
 
@@ -48,6 +49,10 @@ const routes = [
     path: '/users',
     component: UsersPage,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/notices',
+    component: NoticesPage
   }
 ];
 

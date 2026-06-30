@@ -4,19 +4,27 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
 import { authService } from '../services/authService'
 import type { UserData } from '../types'
-import { ArrowLeft, Trash2, User, Search } from 'lucide-vue-next'
+import { ArrowLeft, Trash2, User, Check } from 'lucide-vue-next'
 
-const router = useRouter()
-const authStore = useAuthStore()
+interface Role {
+  id: number
+  name: string
+}
 
 interface UserWithRole extends UserData {
   role: number | null
   role_name: string | null
 }
 
+const router = useRouter()
+const authStore = useAuthStore()
+
 const users = ref<UserWithRole[]>([])
+const roles = ref<Role[]>([])
+const allowedRoleNames = ['regular', 'special', 'Administrador']
 const loading = ref(false)
 const deletingId = ref<number | null>(null)
+const updatingRoleId = ref<number | null>(null)
 
 async function fetchUsers() {
   loading.value = true
@@ -27,6 +35,15 @@ async function fetchUsers() {
     users.value = []
   } finally {
     loading.value = false
+  }
+}
+
+async function fetchRoles() {
+  try {
+    const response = await authService.getRoles()
+    roles.value = response.data
+  } catch {
+    roles.value = []
   }
 }
 
@@ -43,7 +60,31 @@ async function deleteUser(userId: number, userName: string) {
   }
 }
 
-onMounted(fetchUsers)
+async function updateRole(userId: number, roleId: number) {
+  updatingRoleId.value = userId
+  try {
+    const resp = await authService.updateUserRole(userId, roleId)
+    const updated = resp.data as UserWithRole
+    const idx = users.value.findIndex(u => u.id === userId)
+    if (idx !== -1) {
+      users.value[idx].role = updated.role
+      users.value[idx].role_name = updated.role_name
+    }
+  } catch {
+    alert('Error al actualizar el rol.')
+  } finally {
+    updatingRoleId.value = null
+  }
+}
+
+const currentUserId = ref<number | null>(null)
+
+onMounted(async () => {
+  if (authStore.user) {
+    currentUserId.value = (authStore.user as UserData).id
+  }
+  await Promise.all([fetchUsers(), fetchRoles()])
+})
 </script>
 
 <template>
@@ -87,7 +128,7 @@ onMounted(fetchUsers)
             <th class="px-4 py-3">Rol</th>
             <th class="px-4 py-3">Puntos</th>
             <th class="px-4 py-3">Registro</th>
-            <th class="px-4 py-3 text-center">Acción</th>
+            <th class="px-4 py-3 text-center">Eliminar</th>
           </tr>
         </thead>
         <tbody>
@@ -102,24 +143,30 @@ onMounted(fetchUsers)
             <td class="px-4 py-3 text-slate-700">{{ u.major || '—' }}</td>
             <td class="px-4 py-3 text-slate-700">{{ u.current_semester ? u.current_semester + '°' : '—' }}</td>
             <td class="px-4 py-3">
-              <span
-                :class="[
-                  'inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-1',
-                  u.role_name === 'Administrador'
-                    ? 'bg-indigo-100 text-indigo-800'
-                    : u.role_name === 'special'
-                    ? 'bg-amber-100 text-amber-800'
-                    : 'bg-slate-100 text-slate-600'
-                ]"
-              >
-                {{ u.role_name || 'Sin rol' }}
-              </span>
+              <div v-if="u.role_name === 'Administrador'" class="flex items-center gap-2">
+                <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-1 bg-indigo-100 text-indigo-800">
+                  {{ u.role_name }}
+                </span>
+              </div>
+              <div v-else class="flex items-center gap-1">
+                <select
+                  :value="u.role"
+                  :disabled="updatingRoleId === u.id"
+                  @change="updateRole(u.id, Number(($event.target as HTMLSelectElement).value))"
+                  class="text-[10px] font-bold uppercase tracking-wider px-1 py-1 border border-slate-200 bg-white focus:outline-none focus:border-indigo-500 cursor-pointer"
+                >
+                  <option v-for="r in roles.filter(r => allowedRoleNames.includes(r.name))" :key="r.id" :value="r.id">
+                    {{ r.name }}
+                  </option>
+                </select>
+                <Check v-if="updatingRoleId === u.id" class="w-3 h-3 text-emerald-500 animate-pulse" />
+              </div>
             </td>
             <td class="px-4 py-3 font-mono text-xs text-slate-500">{{ u.reputation_points }}</td>
             <td class="px-4 py-3 font-mono text-xs text-slate-400">{{ new Date(u.created_at).toLocaleDateString() }}</td>
             <td class="px-4 py-3 text-center">
               <button
-                v-if="u.role_name !== 'Administrador'"
+                v-if="u.role_name !== 'Administrador' && u.id !== currentUserId"
                 @click="deleteUser(u.id, u.full_name)"
                 :disabled="deletingId === u.id"
                 class="text-rose-500 hover:text-rose-700 disabled:text-rose-300 transition-colors cursor-pointer"
