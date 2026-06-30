@@ -34,6 +34,7 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === HTTP_STATUS.UNAUTHORIZED) {
       clearAuthToken();
+      localStorage.removeItem('sisa_token');
     }
     return Promise.reject(error);
   }

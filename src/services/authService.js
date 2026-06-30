@@ -31,5 +31,13 @@ export const authService = {
 
   deleteUser(userId) {
     return apiClient.delete(`/admin/users/${userId}/`);
+  },
+
+  getRoles() {
+    return apiClient.get('/roles/');
+  },
+
+  updateUserRole(userId, roleId) {
+    return apiClient.patch(`/admin/users/${userId}/role/`, { role_id: roleId });
   }
 };

@@ -32,4 +32,11 @@ declare module 'lucide-vue-next' {
   export const XCircle: LucideIcon
   export const RefreshCw: LucideIcon
   export const LifeBuoy: LucideIcon
+  export const Heart: LucideIcon
+  export const Share2: LucideIcon
+  export const Plus: LucideIcon
+  export const Crown: LucideIcon
+  export const Calendar: LucideIcon
+  export const Tag: LucideIcon
+  export const Megaphone: LucideIcon
 }
